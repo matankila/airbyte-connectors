@@ -223,7 +223,11 @@ export class BitbucketServer {
         this.logger.warn(
           `No default branch is defined for repository ${fullName}. Please set one to enable fetching commits.`
         );
-      } else {
+      } else if (innerErr.message.includes("set as the default branch, but this branch does not exist")) {
+        this.logger.warn(
+          `Default branch for repository ${fullName} is corrupted. Please set another one to enable fetching commits.`
+        );
+      }else {
         throw new VError(
           innerErr,
           `Error fetching commits for repository ${fullName}`
